@@ -535,7 +535,7 @@ def generate_article(
         ],
     }
 
-    url = f"{config.get_value('config.ai.apiUrl').rstrip('/')}/v1/chat/completions"
+    url = f"{config.get_value('config.ai.apiUrl').rstrip('/')}/chat/completions"
 
     for attempt in range(max_retries):
         try:
