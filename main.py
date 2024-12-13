@@ -38,10 +38,14 @@ def perform_clock_in(api_client: ApiClient, config: ConfigManager) -> Dict[str, 
     try:
         current_time = datetime.now()
         current_hour = current_time.hour
-
+        current_weekday = current_time.weekday()
+        logger.info(f"current_weekday:{current_weekday}")
         # TODD: 更加详细的打卡方式设置
         # 判断打卡类型
-        if current_hour < 12:
+        if current_weekday in (5, 6):  # 星期六和星期天
+            checkin_type = "HOLIDAY"
+            display_type = "休息/节假日"
+        elif current_hour < 12:
             checkin_type = "START"
             display_type = "上班"
         elif current_hour >= 12:
@@ -111,7 +115,6 @@ def perform_clock_in(api_client: ApiClient, config: ConfigManager) -> Dict[str, 
     except Exception as e:
         logger.error(f"打卡失败: {e}")
         return {"status": "fail", "message": f"打卡失败: {str(e)}", "task_type": "打卡"}
-
 
 def submit_daily_report(api_client: ApiClient, config: ConfigManager) -> Dict[str, Any]:
     """
